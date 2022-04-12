@@ -80,9 +80,6 @@ const App = () => {
 
 	}
 
-	
-
-
 	const handleenter = async (searchinput) => {
 		movieids=[]
 		setMovies([])

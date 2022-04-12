@@ -26,8 +26,6 @@ const MovieList = (props) => {
 						<div>Language: {movie.Language}</div>
 						<div>Movie Length: {movie.Runtime}</div>
 						
-					
-					
 					</div>
 
 					

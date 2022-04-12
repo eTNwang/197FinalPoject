@@ -22,10 +22,6 @@ const Searchbar = (props) => {
 						 setTimeout(function() { props.setLockout(false)}, 5000);
 						 
 						 
-						 
-						 
-						 
-						 
 					}
 				  }}
 				//onChange={(event) => props.setSearchValue(event.target.value)}		
