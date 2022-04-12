@@ -1,11 +1,9 @@
-import React from 'react';
+import React from 'react'
 
-const Heading = (props) => {
-	return (
-		<div className='col'>
-			<h1>{props.heading}</h1>
-		</div>
-	);
-};
+const Heading = props => (
+  <div className="col">
+    <h1>{props.heading}</h1>
+  </div>
+)
 
-export default Heading;
+export default Heading
