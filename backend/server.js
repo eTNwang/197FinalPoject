@@ -6,6 +6,8 @@ const cookieSession = require('cookie-session')
 const e = require('express')
 const AccountRouter = require('./routes/account')
 const APIRouter = require('./routes/api')
+const FavoriteRouter = require('./routes/favorites')
+
 const logError = require('./middlewares/logError')
 
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/test'
@@ -38,6 +40,7 @@ app.get('/', (req, res) => {
   res.send('hello world')
 })
 
+app.use('/favorites', FavoriteRouter)
 app.use('/account', AccountRouter)
 app.use('/api', APIRouter)
 

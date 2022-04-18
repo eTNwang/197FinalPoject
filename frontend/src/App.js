@@ -143,20 +143,26 @@ export const App = () => {
     }
   }
 
-  const getMovieRequest = async => {
+  const getMovieRequest = async searchValue => {
     for (let i = 0; i < 5; i++) {
       const url = `https://www.omdbapi.com/?s=${searchValue}&page=${i}&apikey=aacf212a`
-      const response = fetch(url)
-      const responseJson = response.json()
+      const response = await fetch(url)
+      const responseJson = await response.json()
+
       if (responseJson.Search) {
         (responseJson.Search).forEach(element => {
-          setMovies([...movies, element])
+          setMovies(movies => [...movies, element])
         })
       }
     }
   }
 
   const filterMovies = value => {
+    movieData.forEach(element => {
+      console.log(element)
+      console.log(filterValue)
+      console.log(element[filterValue])
+    })
     setMovieData(movieData.filter((item => item[filterValue] === value)))
   }
 
@@ -175,9 +181,9 @@ export const App = () => {
     setMovieData(oldArray => [...oldArray, responseJson])
   }
 
-  const generateMovieDetails = () => {
-    for (let j = 0; j < movieids.length; j++) {
-      getMovieDetails(movieids[j])
+  const generateMovieDetails = async () => {
+    for (const element of movieids) {
+      await getMovieDetails(element)
     }
   }
 
@@ -198,8 +204,40 @@ export const App = () => {
         <p><Link to="/home">Home </Link></p>
         <p><Link to="/signup">Sign Up</Link></p>
         <p><Link to="/login"> Log In</Link></p>
+        <p><Link to="/favorites"> Browse Favorites</Link></p>
       </nav>
     </div>
+
+  //     <div className="container-fluid movie-app">
+  //       <div className="row d-flex align-items-center mt-4 mb-4">
+  //         <Heading heading="Movies" />
+  //         <Searchbar
+  //           searchValue={searchValue}
+  //           filterValue={filterValue}
+  //           setfilterValue={setfilterValue}
+  //           handleenter={handleenter}
+  //           filterMovies={filterMovies}
+  //           lockout={lockout}
+  //           setLockout={setLockout}
+  //         />
+  //       </div>
+
+  //       <div className="row">
+  //         <Movies moviedetails={movieData} favouriteComponent={AddFavourites} handleFavouritesClick={addFavouriteMovie} />
+  //       </div>
+
+  //       <div className="row d-flex align-items-center mt-4 mb-4">
+  //         <Heading heading="Favourites" />
+  //       </div>
+  //       <div className="row">
+  //         <Movies
+  //           moviedetails={favourites}
+  //           favouriteComponent={AddFavourites}
+  //           setfilterValue={setfilterValue}
+  //           filterMovies={filterMovies}
+  //         />
+  //       </div>
+  //     </div>
   )
 }
 

@@ -20,75 +20,33 @@ import Heading from './components/Heading'
 import Searchbar from './components/Searchbar'
 import AddFavourites from './components/AddToFavorites'
 
-export const Home = () => {
+export const Favorites = () => {
   const [questionText, setQuestionText] = useState('')
   const [msg, setMsg] = useState('')
   const [curruser, setCurrUser] = useState([])
   const [loginStatus, setLoginStatus] = useState([])
   const [questions, setQuestions] = useState([])
   const [show, setShow] = useState([])
-
+  const [user, setUser] = useState('')
   const [movies, setMovies] = useState([])
   const [movieData, setMovieData] = useState([])
   const [searchValue, setSearchValue] = useState('')
+
   const [lockout, setLockout] = useState(false)
   const [filterValue, setfilterValue] = useState('Language')
-  const [favourites, setFavourites] = useState([])
-  const [currfav, setCurrfav] = useState('')
 
   let movieids = []
   const favoriteids = []
 
-  const addfavorite = async movieid => {
-    const data = await axios.post('/favorites/add', { movieid })
+  const obtainfavorites = async () => {
+    console.log(user)
+    const data = await axios.get('/favorites/getfavorite', { user })
     console.log(data)
-  }
-
-  const addFavouriteMovie = (movie, input) => {
-    setCurrfav(movie.imdbID)
-    console.log(currfav)
-    if (favourites.includes(movie)) {
-      setFavourites(favourites)
-      console.log(movie)
-    } else {
-      const newFavouriteList = [...favourites, movie]
-      setFavourites(newFavouriteList)
-    }
-    addfavorite(input)
-  }
-
-  const getMovieRequest = async searchValue => {
-    for (let i = 0; i < 5; i++) {
-      const url = `https://www.omdbapi.com/?s=${searchValue}&page=${i}&apikey=aacf212a`
-      const response = await fetch(url)
-      const responseJson = await response.json()
-
-      if (responseJson.Search) {
-        (responseJson.Search).forEach(element => {
-          setMovies(movies => [...movies, element])
-        })
-      }
-    }
-  }
-
-  const filterMovies = value => {
-    movieData.forEach(element => {
-      console.log(element)
-      console.log(filterValue)
-      console.log(element[filterValue])
-    })
-    setMovieData(movieData.filter((item => item[filterValue] === value)))
-  }
-
-  const generateMovieIds = async () => {
-    await getMovieRequest
-    movies.forEach(element => {
-      const currentid = element.imdbID
-      movieids.push(currentid)
-    })
+    setMovies(data)
   }
 
   const getMovieDetails = async idValue => {
+    console.log(idValue)
     const url = `https://www.omdbapi.com/?i=${idValue}&apikey=aacf212a`
     const response = await fetch(url)
     const responseJson = await response.json()
@@ -96,8 +54,8 @@ export const Home = () => {
   }
 
   const generateMovieDetails = async () => {
-    for (const element of movieids) {
-      await getMovieDetails(element)
+    for (const element of movies) {
+      await getMovieDetails(element.movieid)
     }
   }
 
@@ -105,9 +63,6 @@ export const Home = () => {
     movieids = []
     setMovies([])
     setMovieData([])
-
-    await getMovieRequest(searchinput)
-    await generateMovieIds()
     await generateMovieDetails()
   }
 
@@ -125,10 +80,20 @@ export const Home = () => {
     setCurrUser(data)
   }
 
+  const filterMovies = value => {
+    movieData.forEach(element => {
+      console.log(element)
+      console.log(filterValue)
+      console.log(element[filterValue])
+    })
+    setMovieData(movieData.filter((item => item[filterValue] === value)))
+  }
+
   useEffect(() => {
     const intervalID = setInterval(() => {
       getcurruser()
       getStatus(setLoginStatus)
+      console.log(movieData)
     }, 2000)
     return () => clearInterval(intervalID)
   }, [])
@@ -189,33 +154,25 @@ export const Home = () => {
       {loginStatus && (
 
       <div>
-        <div className="container-fluid movie-app">
-          <div className="row d-flex align-items-center mt-4 mb-4">
-            <Heading heading="Movies" />
-            <Searchbar
-              searchValue={searchValue}
-              filterValue={filterValue}
-              setfilterValue={setfilterValue}
-              handleenter={handleenter}
-              filterMovies={filterMovies}
-              lockout={lockout}
-              setLockout={setLockout}
-            />
-          </div>
-          <div className="row">
-            <Movies moviedetails={movieData} favouriteComponent={AddFavourites} handleFavouritesClick={addFavouriteMovie} />
-          </div>
-        </div>
+        <input placeholder="Enter a User" onChange={e => setUser(e.target.value)} />
+        <Button
+          onClick={() => {
+            obtainfavorites()
+            generateMovieDetails()
+          }}
+        >
+          Submit
+        </Button>
+
         <div className="row d-flex align-items-center mt-4 mb-4">
           <Heading heading="Favourites" />
         </div>
 
         <div className="row">
           <Movies
-            moviedetails={favourites}
+            moviedetails={movieData}
             favouriteComponent={AddFavourites}
             setfilterValue={setfilterValue}
-            filterMovies={filterMovies}
           />
         </div>
 
@@ -225,5 +182,4 @@ export const Home = () => {
   )
 }
 
-export default Home
-
+export default Favorites

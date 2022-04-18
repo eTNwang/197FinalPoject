@@ -11,6 +11,7 @@ import { App } from './App'
 import Login from './Login'
 import Signup from './Signup'
 import { Home } from './Home'
+import Favorites from './Favorites'
 
 const app = document.getElementById('app')
 ReactDOM.render(
@@ -20,6 +21,7 @@ ReactDOM.render(
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/favorites" element={<Favorites />} />
     </Routes>
   </Router>,
   app,
