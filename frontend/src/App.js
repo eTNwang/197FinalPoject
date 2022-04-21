@@ -122,7 +122,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Movies from './components/Movies'
 import Heading from './components/Heading'
 import Searchbar from './components/Searchbar'
-import AddFavourites from './components/AddToFavorites'
 
 export const App = () => {
   const [msg, setMsg] = useState('')
@@ -145,7 +144,7 @@ export const App = () => {
 
   const getMovieRequest = async searchValue => {
     for (let i = 0; i < 5; i++) {
-      const url = `https://www.omdbapi.com/?s=${searchValue}&page=${i}&apikey=aacf212a`
+      const url = `https://www.omdbapi.com/?s=${searchValue}&page=${i}&apikey=ce7a07b3`
       const response = await fetch(url)
       const responseJson = await response.json()
 
@@ -175,7 +174,7 @@ export const App = () => {
   }
 
   const getMovieDetails = async idValue => {
-    const url = `https://www.omdbapi.com/?i=${idValue}&apikey=aacf212a`
+    const url = `https://www.omdbapi.com/?i=${idValue}&apikey=ce7a07b3`
     const response = await fetch(url)
     const responseJson = await response.json()
     setMovieData(oldArray => [...oldArray, responseJson])

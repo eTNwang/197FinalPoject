@@ -18,7 +18,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Movies from './components/Movies'
 import Heading from './components/Heading'
 import Searchbar from './components/Searchbar'
-import AddFavourites from './components/AddToFavorites'
+import FavoriteBar from './components/FavoriteBar'
 
 export const Home = () => {
   const [questionText, setQuestionText] = useState('')
@@ -59,7 +59,7 @@ export const Home = () => {
 
   const getMovieRequest = async searchValue => {
     for (let i = 0; i < 5; i++) {
-      const url = `https://www.omdbapi.com/?s=${searchValue}&page=${i}&apikey=aacf212a`
+      const url = `https://www.omdbapi.com/?s=${searchValue}&page=${i}&apikey=ce7a07b3`
       const response = await fetch(url)
       const responseJson = await response.json()
 
@@ -203,10 +203,10 @@ export const Home = () => {
             />
           </div>
           <div className="row">
-            <Movies moviedetails={movieData} favouriteComponent={AddFavourites} handleFavouritesClick={addFavouriteMovie} />
+            <Movies moviedetails={movieData} favouriteComponent={FavoriteBar} handleFavouritesClick={addFavouriteMovie} />
           </div>
         </div>
-        <div className="row d-flex align-items-center mt-4 mb-4">
+        {/* <div className="row d-flex align-items-center mt-4 mb-4">
           <Heading heading="Favourites" />
         </div>
 
@@ -217,7 +217,7 @@ export const Home = () => {
             setfilterValue={setfilterValue}
             filterMovies={filterMovies}
           />
-        </div>
+        </div> */}
 
       </div>
       )}

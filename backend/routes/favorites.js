@@ -9,9 +9,9 @@ router.get('/', async (req, res) => {
   res.json(favorites)
 })
 
-router.get('/getfavorite', async (req, res) => {
-  const { body } = req
-  const { user } = body
+router.get('/getfavorite/:user', async (req, res) => {
+  const { params } = req
+  const { user } = params
   const favorites = await Favorited.find({ user })
   res.json(favorites)
 })

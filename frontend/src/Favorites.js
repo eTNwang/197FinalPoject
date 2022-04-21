@@ -18,7 +18,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Movies from './components/Movies'
 import Heading from './components/Heading'
 import Searchbar from './components/Searchbar'
-import AddFavourites from './components/AddToFavorites'
+import FavoriteBar from './components/FavoriteBar'
 
 export const Favorites = () => {
   const [questionText, setQuestionText] = useState('')
@@ -30,6 +30,8 @@ export const Favorites = () => {
   const [user, setUser] = useState('')
   const [movies, setMovies] = useState([])
   const [movieData, setMovieData] = useState([])
+  const [usermovies, setUserMovies] = useState([])
+  const [usermovieData, setUserMovieData] = useState([])
   const [searchValue, setSearchValue] = useState('')
 
   const [lockout, setLockout] = useState(false)
@@ -39,23 +41,39 @@ export const Favorites = () => {
   const favoriteids = []
 
   const obtainfavorites = async () => {
-    console.log(user)
-    const data = await axios.get('/favorites/getfavorite', { user })
-    console.log(data)
+    const { data } = await axios.get(`/favorites/getfavorite/${user}`)
     setMovies(data)
+  }
+
+  const obtainuserfavorites = async () => {
+    const { data } = await axios.get(`/favorites/getfavorite/${curruser}`)
+    setUserMovies(data)
   }
 
   const getMovieDetails = async idValue => {
     console.log(idValue)
-    const url = `https://www.omdbapi.com/?i=${idValue}&apikey=aacf212a`
+    const url = `https://www.omdbapi.com/?i=${idValue}&apikey=ce7a07b3`
     const response = await fetch(url)
     const responseJson = await response.json()
     setMovieData(oldArray => [...oldArray, responseJson])
   }
 
+  const getUserMovieDetails = async idValue => {
+    const url = `https://www.omdbapi.com/?i=${idValue}&apikey=ce7a07b3`
+    const response = await fetch(url)
+    const responseJson = await response.json()
+    setUserMovieData(oldArray => [...oldArray, responseJson])
+  }
+
   const generateMovieDetails = async () => {
     for (const element of movies) {
       await getMovieDetails(element.movieid)
+    }
+  }
+
+  const generateUserMovieDetails = async () => {
+    for (const element of usermovies) {
+      await getUserMovieDetails(element.movieid)
     }
   }
 
@@ -93,7 +111,7 @@ export const Favorites = () => {
     const intervalID = setInterval(() => {
       getcurruser()
       getStatus(setLoginStatus)
-      console.log(movieData)
+      console.log(usermovieData)
     }, 2000)
     return () => clearInterval(intervalID)
   }, [])
@@ -126,6 +144,15 @@ export const Favorites = () => {
             {curruser}
           </Navbar.Text>
           <Button onClick={userlogout}>Logout</Button>
+          <Button onClick={() => {
+            setUserMovieData([])
+            obtainuserfavorites()
+            generateUserMovieDetails()
+          }}
+          >
+            {' '}
+            Refresh your favorites
+          </Button>
         </div>
         )}
         {!loginStatus && (
@@ -164,6 +191,20 @@ export const Favorites = () => {
           Submit
         </Button>
 
+        <div className="container-fluid movie-app">
+          
+        <div className="row d-flex align-items-center mt-4 mb-4">
+          <Heading heading="These are Your Favourite Movies!" />
+        </div>
+
+        <div className="row">
+          <Movies
+            moviedetails={usermovieData}
+            favouriteComponent={<></>}
+            setfilterValue={setfilterValue}
+          />
+        </div>
+
         <div className="row d-flex align-items-center mt-4 mb-4">
           <Heading heading="Favourites" />
         </div>
@@ -171,9 +212,10 @@ export const Favorites = () => {
         <div className="row">
           <Movies
             moviedetails={movieData}
-            favouriteComponent={AddFavourites}
+            favouriteComponent={<></>}
             setfilterValue={setfilterValue}
           />
+        </div>
         </div>
 
       </div>
